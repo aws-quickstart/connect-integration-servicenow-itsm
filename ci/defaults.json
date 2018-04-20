@@ -1,0 +1,12 @@
+[{
+        "ParameterKey": "ServiceNowUserName",
+        "ParameterValue": "$[alfred_genuuid]"
+    }, {
+        "ParameterKey": "ServiceNowPassword",
+        "ParameterValue": "$[alfred_genuuid]"
+    },
+    {
+        "ParameterKey": "ConnectInstanceId",
+        "ParameterValue": "$[alfred_genuuid]"
+    }
+]
