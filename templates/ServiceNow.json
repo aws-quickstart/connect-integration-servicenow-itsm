@@ -38,74 +38,6 @@
         }
     },
     "Resources": {
-        "CreateIncidentMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "CreateIncidentResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateIncident.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "CreateIncidentResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "CreateIncident"
-            }
-        },
-        "CreateIncidentApiPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "CreateIncident",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
-                    ]
-                }
-            }
-        },
         "ServiceNowCreateIncidentConnectPermission": {
             "Type": "AWS::Lambda::Permission",
             "DependsOn": "ServiceNowCreateIncident",
@@ -225,7 +157,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/CreateIncident/lambda.zip"
                 },
                 "Description": "ServiceNow CreateIncident",
@@ -289,74 +221,6 @@
                     "Fn::GetAtt": [
                         "KeepServiceNowCreateIncidentWarmEventRule",
                         "Arn"
-                    ]
-                }
-            }
-        },
-        "CreateIncidentByPhoneMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "CreateIncidentByPhoneResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateIncidentByPhone.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "CreateIncidentByPhoneResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "CreateIncidentByPhone"
-            }
-        },
-        "CreateIncidentByPhoneApiPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "CreateIncidentByPhone",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
                     ]
                 }
             }
@@ -480,7 +344,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/CreateIncidentByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow CreateIncidentByPhone",
@@ -544,74 +408,6 @@
                     "Fn::GetAtt": [
                         "KeepServiceNowCreateIncidentByPhoneWarmEventRule",
                         "Arn"
-                    ]
-                }
-            }
-        },
-        "GetIncidentByPhoneMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "GetIncidentByPhoneResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetIncidentByPhone.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "GetIncidentByPhoneResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "GetIncidentByPhone"
-            }
-        },
-        "GetIncidentByPhoneApiPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "GetIncidentByPhone",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
                     ]
                 }
             }
@@ -735,7 +531,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetIncidentByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow GetIncidentByPhone",
@@ -799,74 +595,6 @@
                     "Fn::GetAtt": [
                         "KeepServiceNowGetIncidentByPhoneWarmEventRule",
                         "Arn"
-                    ]
-                }
-            }
-        },
-        "GetIncidentStateMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "GetIncidentStateResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetIncidentState.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "GetIncidentStateResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "GetIncidentState"
-            }
-        },
-        "GetIncidentStateApiPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "GetIncidentState",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
                     ]
                 }
             }
@@ -990,7 +718,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetIncidentState/lambda.zip"
                 },
                 "Description": "ServiceNow GetIncidentState",
@@ -1054,74 +782,6 @@
                     "Fn::GetAtt": [
                         "KeepServiceNowGetIncidentStateWarmEventRule",
                         "Arn"
-                    ]
-                }
-            }
-        },
-        "GetLatestStateByPhoneMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "GetLatestStateByPhoneResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetLatestStateByPhone.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "GetLatestStateByPhoneResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "GetLatestStateByPhone"
-            }
-        },
-        "GetLatestStateByPhoneApiPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "GetLatestStateByPhone",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
                     ]
                 }
             }
@@ -1245,7 +905,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetLatestStateByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow GetLatestStateByPhone",
@@ -1313,80 +973,12 @@
                 }
             }
         },
-        "integration-testMethod": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ResourceId": {
-                    "Ref": "integration-testResource"
-                },
-                "HttpMethod": "POST",
-                "AuthorizationType": "NONE",
-                "Integration": {
-                    "Type": "AWS_PROXY",
-                    "IntegrationHttpMethod": "POST",
-                    "Uri": {
-                        "Fn::Sub": "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${integration-test.Arn}/invocations"
-                    }
-                }
-            }
-        },
-        "integration-testResource": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-                "RestApiId": {
-                    "Ref": "ITSMAPI"
-                },
-                "ParentId": {
-                    "Fn::GetAtt": [
-                        "ITSMAPI",
-                        "RootResourceId"
-                    ]
-                },
-                "PathPart": "integration-test"
-            }
-        },
-        "integration-testApiPermission": {
+        "ServiceNowintegrationTestConnectPermission": {
             "Type": "AWS::Lambda::Permission",
-            "Properties": {
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "integration-test",
-                        "Arn"
-                    ]
-                },
-                "Action": "lambda:InvokeFunction",
-                "Principal": "apigateway.amazonaws.com",
-                "SourceArn": {
-                    "Fn::Join": [
-                        "",
-                        [
-                            "arn:aws:execute-api:",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            ":",
-                            {
-                                "Ref": "AWS::AccountId"
-                            },
-                            ":",
-                            {
-                                "Ref": "ITSMAPI"
-                            },
-                            "/*"
-                        ]
-                    ]
-                }
-            }
-        },
-        "ServiceNowintegration-testConnectPermission": {
-            "Type": "AWS::Lambda::Permission",
-            "DependsOn": "ServiceNowintegration-test",
+            "DependsOn": "ServiceNowintegrationTest",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowintegration-test",
+                "FunctionName": "function:ServiceNowintegrationTest",
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -1412,13 +1004,13 @@
                 }
             }
         },
-        "ServiceNowintegration-testExecutionPolicy": {
+        "ServiceNowintegrationTestExecutionPolicy": {
             "Type": "AWS::IAM::Policy",
             "Properties": {
-                "PolicyName": "ServiceNowintegration-testExecutionPolicy",
+                "PolicyName": "ServiceNowintegrationTestExecutionPolicy",
                 "Roles": [
                     {
-                        "Ref": "ServiceNowintegration-testExecutionRole"
+                        "Ref": "ServiceNowintegrationTestExecutionRole"
                     }
                 ],
                 "PolicyDocument": {
@@ -1463,7 +1055,7 @@
                                             {
                                                 "Ref": "AWS::AccountId"
                                             },
-                                            ":log-group:/aws/lambda/ServiceNowintegration-test:*"
+                                            ":log-group:/aws/lambda/ServiceNowintegrationTest:*"
                                         ]
                                     ]
                                 }
@@ -1473,7 +1065,7 @@
                 }
             }
         },
-        "ServiceNowintegration-testExecutionRole": {
+        "ServiceNowintegrationTestExecutionRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "AssumeRolePolicyDocument": {
@@ -1493,17 +1085,17 @@
                     ]
                 },
                 "Path": "/",
-                "RoleName": "ServiceNowintegration-testExecutionRole"
+                "RoleName": "ServiceNowintegrationTestExecutionRole"
             }
         },
-        "ServiceNowintegration-test": {
+        "ServiceNowintegrationTest": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
-                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/integration-test/lambda.zip"
+                    "S3Bucket": "aws-quickstart",
+                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/integrationTest/lambda.zip"
                 },
-                "Description": "ServiceNow integration-test",
+                "Description": "ServiceNow integrationTest",
                 "Environment": {
                     "Variables": {
                         "SERVICENOW_USERNAME": {
@@ -1517,12 +1109,12 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowintegration-test",
+                "FunctionName": "ServiceNowintegrationTest",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
-                        "ServiceNowintegration-testExecutionRole",
+                        "ServiceNowintegrationTestExecutionRole",
                         "Arn"
                     ]
                 },
@@ -1530,9 +1122,9 @@
                 "Runtime": "nodejs6.10"
             }
         },
-        "KeepServiceNowintegration-testWarmEventRule": {
+        "KeepServiceNowintegrationTestWarmEventRule": {
             "Type": "AWS::Events::Rule",
-            "DependsOn": "ServiceNowintegration-test",
+            "DependsOn": "ServiceNowintegrationTest",
             "Properties": {
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
@@ -1541,28 +1133,28 @@
                     {
                         "Arn": {
                             "Fn::GetAtt": [
-                                "ServiceNowintegration-test",
+                                "ServiceNowintegrationTest",
                                 "Arn"
                             ]
                         },
-                        "Id": "ServiceNowintegration-test",
+                        "Id": "ServiceNowintegrationTest",
                         "Input": "{\"keepwarm\": true}"
                     }
                 ]
             }
         },
-        "PermissionForServiceNowintegration-testEventRuleToInvokeLambda": {
+        "PermissionForServiceNowintegrationTestEventRuleToInvokeLambda": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": "ServiceNowintegration-test",
+            "DependsOn": "ServiceNowintegrationTest",
             "Properties": {
                 "FunctionName": {
-                    "Ref": "ServiceNowintegration-test"
+                    "Ref": "ServiceNowintegrationTest"
                 },
                 "Action": "lambda:InvokeFunction",
                 "Principal": "events.amazonaws.com",
                 "SourceArn": {
                     "Fn::GetAtt": [
-                        "KeepServiceNowintegration-testWarmEventRule",
+                        "KeepServiceNowintegrationTestWarmEventRule",
                         "Arn"
                     ]
                 }
