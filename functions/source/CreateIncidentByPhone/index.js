@@ -24,10 +24,9 @@ var getProcessFunctions = function (params) {
                 getPostData(params);
                 getPostOptions(params);
                 getData(params, "returnToConnect");
-                //postData(params,"returnToConnect");
             }
             else{
-                params.execute("returnToConnect",params,'""');
+                params.execute("returnToConnect",params,'{"Error": "User not found"}');
             }
 
         }

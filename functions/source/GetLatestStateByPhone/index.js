@@ -15,7 +15,15 @@ var getProcessFunctions = function(params){
     };
     params.funcs = {
         "returnToConnect" :  function(params, body){
-            params.callback(null, JSON.parse(body));
+            var states = ["New","Active","Awaiting Problem", "Awaiting User Info", "Awaiting Evidence", "Resolved", "Closed"];
+            var responseObj = JSON.parse(body);
+            if(responseObj.result){
+                responseObj.result[0].state = states[parseInt(responseObj.result[0].state) - 1];
+                params.callback(null, responseObj);
+            }
+            else{
+                params.callback(null,JSON.parse('{"Error": "No incidents related"}'));
+            }
         },
         "processUserName" : function (params, body){
             var userObj = JSON.parse(body);
