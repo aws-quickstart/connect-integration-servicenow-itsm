@@ -1,6 +1,7 @@
 var https = require('https');
 
 exports.handler = function (contact, context, callback) {
+    if (!contact.Details || !contact.Details.Parameters) return;
     var params = contact.Details.Parameters;
     params.callback = callback;
     getRequestData(params);
@@ -19,7 +20,7 @@ var getData = function (params) {
             var responseObj = JSON.parse(body);
             if(responseObj.result){
                 responseObj.result[0].state = states[parseInt(responseObj.result[0].state) - 1];
-                params.callback(null, responseObj);
+                params.callback(null, responseObj.result[0]);
             }
             else{
                 params.callback(null,JSON.parse('{"Error": "Incident Not Found"}'));
