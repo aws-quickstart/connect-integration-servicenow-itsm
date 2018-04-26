@@ -157,7 +157,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/CreateIncident/lambda.zip"
                 },
                 "Description": "ServiceNow CreateIncident",
@@ -344,7 +344,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/CreateIncidentByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow CreateIncidentByPhone",
@@ -531,7 +531,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetIncidentByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow GetIncidentByPhone",
@@ -718,7 +718,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetIncidentState/lambda.zip"
                 },
                 "Description": "ServiceNow GetIncidentState",
@@ -905,7 +905,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/GetLatestStateByPhone/lambda.zip"
                 },
                 "Description": "ServiceNow GetLatestStateByPhone",
@@ -1092,7 +1092,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
-                    "S3Bucket": "tom.huguenard",
+                    "S3Bucket": "aws-quickstart",
                     "S3Key": "connect-integration-servicenow-itsm/functions/packages/integrationTest/lambda.zip"
                 },
                 "Description": "ServiceNow integrationTest",
