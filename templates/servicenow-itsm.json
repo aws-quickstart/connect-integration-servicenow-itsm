@@ -1,15 +1,22 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "ServiceNow Incident Management Stack - Connect integration for Service Now! incident management",
+    "Description": "ServiceNow Incident Management integration for Amazon Connect (qs-1oe4gsu1d)",
     "Metadata": {
         "AWS::CloudFormation::Interface": {
             "ParameterGroups": [
                 {
                     "Label": {
-                        "default": "ServiceNow Incident Management Parameters"
+                        "default": "Amazon Connect Configuration"
                     },
                     "Parameters": [
-                        "ConnectInstanceId",
+                        "ConnectInstanceId"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "ServiceNow Incident Management Configuration"
+                    },
+                    "Parameters": [
                         "ServiceNowUserName",
                         "ServiceNowPassword",
                         "ServiceNowHost"
@@ -20,26 +27,27 @@
     },
     "Parameters": {
         "ServiceNowUserName": {
-            "Description": "ServiceNow User Name.",
+            "Description": "ServiceNow User Name",
             "AllowedPattern": "^.{5,50}$",
             "ConstraintDescription": "User name must be between 5 and 50 characters in length.",
             "Type": "String"
         },
         "ServiceNowPassword": {
-            "Description": "ServiceNow Password.",
+            "Description": "ServiceNow Password",
             "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
             "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
             "Type": "String"
         },
         "ServiceNowHost": {
-            "Description": "ServiceNow Host.",
+            "Description": "ServiceNow Host (example.service-now.com)",
             "AllowedPattern": "^[a-zA-Z0-9-.]+[.]service-now.com$",
-            "ConstraintDescription": "Endpoint must be a valid ServiceNow API Host URI. Ex: example.service-now.com",
+            "ConstraintDescription": "Endpoint must be a valid ServiceNow API Host URI. For example, example.service-now.com",
             "Type": "String"
         },
         "ConnectInstanceId": {
+            "Description": "Please visit https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-instance.html for instructions on how to find your Amazon Connect instance ID",
             "AllowedPattern": "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}",
-            "Description": "ID of your Connect Instance. Contains Upper and Lower case letters, Numbers and Dashes (-).",
+            "ConstraintDescription": "Amazon Connect instance ID contains upper and lower case letters, numbers and dashes (-).",
             "Type": "String"
         }
     },
