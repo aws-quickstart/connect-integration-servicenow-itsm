@@ -21,14 +21,20 @@
     "Parameters": {
         "ServiceNowUserName": {
             "Description": "ServiceNow User Name.",
+            "AllowedPattern": "^.{5,50}$",
+            "ConstraintDescription": "User name must be between 5 and 50 characters in length.",
             "Type": "String"
         },
         "ServiceNowPassword": {
             "Description": "ServiceNow Password.",
+            "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
+            "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
             "Type": "String"
         },
         "ServiceNowHost": {
             "Description": "ServiceNow Host.",
+            "AllowedPattern": "^[a-zA-Z0-9-.]+[.]service-now.com$",
+            "ConstraintDescription": "Endpoint must be a valid ServiceNow API Host URI. Ex: example.service-now.com",
             "Type": "String"
         },
         "ConnectInstanceId": {

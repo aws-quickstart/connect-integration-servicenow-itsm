@@ -1,6 +1,8 @@
 var https = require('https');
 exports.handler = function (contact, context, callback) {
-    var params = contact.Details;
+    if (!contact.Details || !contact.Details.Parameters) return;
+    var params = contact.Details.Parameters;
+    params.ANI = contact.Details.ContactData.CustomerEndpoint.Address;
     params.callback = callback;
     getProcessFunctions(params);
 
@@ -9,13 +11,26 @@ exports.handler = function (contact, context, callback) {
     getData(params, "processUserName");
 };
 
+function flatten(obj){
+   var keys = Object.keys(obj);
+   keys.forEach(key => {
+       if (typeof obj[key] === "object") obj[key] = null;
+   });
+   return obj;
+} 
+
 var getProcessFunctions = function (params) {
     params.execute = function (key, params, body) {
         params.funcs[key](params, body);
     };
     params.funcs = {
         "returnToConnect": function (params, body) {
-            params.callback(null, JSON.parse(body));
+            var userObj = JSON.parse(body);
+            var newResult = {};
+            newResult.number = userObj.result.number;
+            newResult.priority= userObj.result.priority;
+            newResult.state= userObj.result.state;
+            params.callback(null, newResult);
         },
         "processUserName": function (params, body) {
             var userObj = JSON.parse(body);
@@ -24,10 +39,9 @@ var getProcessFunctions = function (params) {
                 getPostData(params);
                 getPostOptions(params);
                 getData(params, "returnToConnect");
-                //postData(params,"returnToConnect");
             }
             else{
-                params.execute("returnToConnect",params,'""');
+                params.execute("returnToConnect",params,'{"Error": "User not found"}');
             }
 
         }
@@ -61,7 +75,7 @@ var getRequestOptions = function (params, path) {
 
 var getPostData = function (params) {
     params.requestData = {
-        "short_description": params.Parameters.Description,
+        "short_description": params.Description,
         "caller_id": params.sys_id
     };
     params.get_data = JSON.stringify(params.requestData);
@@ -83,7 +97,7 @@ var getPhoneRequestOptions = function (params) {
 
 var getPhoneRequestData = function (params) {
     params.requestData = {
-        Phone: (params.Parameters.Phone?params.Parameters.Phone:params.ContactData.CustomerEndpoint.Address.substring(2))
+        Phone: (params.Phone?params.Phone:params.ANI.substring(2))
     };
     params.get_data = JSON.stringify(params.requestData);
 };

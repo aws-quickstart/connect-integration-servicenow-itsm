@@ -1,6 +1,8 @@
 var https = require('https');
 exports.handler = function (contact, context, callback) {
-    var params = contact.Details;
+    if (!contact.Details || !contact.Details.Parameters) return;
+    var params = contact.Details.Parameters;
+    params.ANI = contact.Details.ContactData.CustomerEndpoint.Address;
     params.callback = callback;
     getProcessFunctions(params);
    
@@ -15,7 +17,15 @@ var getProcessFunctions = function(params){
     };
     params.funcs = {
         "returnToConnect" :  function(params, body){
-            params.callback(null, JSON.parse(body));
+            var states = ["New","Active","Awaiting Problem", "Awaiting User Info", "Awaiting Evidence", "Resolved", "Closed"];
+            var responseObj = JSON.parse(body);
+            if(responseObj.result){
+                responseObj.result[0].state = states[parseInt(responseObj.result[0].state) - 1];
+                params.callback(null, responseObj.result[0]);
+            }
+            else{
+                params.callback(null,JSON.parse('{"Error": "No incidents related"}'));
+            }
         },
         "processUserName" : function (params, body){
             var userObj = JSON.parse(body);
@@ -73,7 +83,7 @@ var getPhoneRequestOptions = function(params){
 
 var getPhoneRequestData = function (params) {
     params.requestData = {
-        Phone: (params.Parameters.Phone?params.Parameters.Phone:params.ContactData.CustomerEndpoint.Address.substring(2))
+        Phone: (params.Phone?params.Phone:params.ANI.substring(2))
     };
     params.get_data = JSON.stringify(params.requestData); 
 };
