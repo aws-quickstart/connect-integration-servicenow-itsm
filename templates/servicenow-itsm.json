@@ -25,6 +25,32 @@
             ]
         }
     },
+    "Parameters": {
+        "ServiceNowUserName": {
+            "Description": "ServiceNow User Name",
+            "AllowedPattern": "^.{5,50}$",
+            "ConstraintDescription": "User name must be between 5 and 50 characters in length.",
+            "Type": "String"
+        },
+        "ServiceNowPassword": {
+            "Description": "ServiceNow Password",
+            "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
+            "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
+            "Type": "String"
+        },
+        "ServiceNowHost": {
+            "Description": "ServiceNow Host (example.service-now.com)",
+            "AllowedPattern": "^[a-zA-Z0-9-.]+[.]service-now.com$",
+            "ConstraintDescription": "Endpoint must be a valid ServiceNow API Host URI. For example, example.service-now.com",
+            "Type": "String"
+        },
+        "ConnectInstanceId": {
+            "Description": "Please visit https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-instance.html for instructions on how to find your Amazon Connect instance ID",
+            "AllowedPattern": "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}",
+            "ConstraintDescription": "Amazon Connect instance ID contains upper and lower case letters, numbers and dashes (-).",
+            "Type": "String"
+        }
+    },
     "Outputs": {
         "ServiceNowCreateIncidentArnOutput": {
             "Description": "The ARN of the CreateIncident Lambda",
@@ -70,31 +96,6 @@
                     "Arn"
                 ]
             }
-        }
-    },
-    "Parameters": {
-        "ServiceNowUserName": {
-            "Description": "ServiceNow User Name",
-            "AllowedPattern": "^.{5,50}$",
-            "ConstraintDescription": "User name must be between 5 and 50 characters in length.",
-            "Type": "String"
-        },
-        "ServiceNowPassword": {
-            "Description": "ServiceNow Password",
-            "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
-            "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
-            "Type": "String"
-        },
-        "ServiceNowHost": {
-            "Description": "ServiceNow Host (example.service-now.com)",
-            "AllowedPattern": "^[a-zA-Z0-9-.]+[.]service-now.com$",
-            "ConstraintDescription": "Endpoint must be a valid ServiceNow API Host URI. For example, example.service-now.com",
-            "Type": "String"
-        },
-        "ConnectInstanceId": {
-            "AllowedPattern": "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}",
-            "ConstraintDescription": "Amazon Connect instance ID contains upper and lower case letters, numbers and dashes (-).",
-            "Type": "String"
         }
     },
     "Resources": {
