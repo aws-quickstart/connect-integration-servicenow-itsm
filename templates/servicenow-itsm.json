@@ -3,7 +3,8 @@
     "Description": "ServiceNow Incident Management integration for Amazon Connect (qs-1oe4gsu1d)",
     "Metadata": {
         "AWS::CloudFormation::Interface": {
-            "ParameterGroups": [{
+            "ParameterGroups": [
+                {
                     "Label": {
                         "default": "Amazon Connect Configuration"
                     },
@@ -63,7 +64,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -85,17 +87,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowCreateIncidentExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowCreateIncidentExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowCreateIncidentExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -115,21 +121,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowCreateIncident:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowCreateIncident:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -140,17 +149,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowCreateIncidentExecutionRole"
@@ -197,16 +208,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowCreateIncident",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowCreateIncident",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowCreateIncident",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowCreateIncident",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowCreateIncidentEventRuleToInvokeLambda": {
@@ -238,7 +251,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -260,17 +274,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowCreateIncidentByPhoneExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowCreateIncidentByPhoneExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowCreateIncidentByPhoneExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -290,21 +308,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowCreateIncidentByPhone:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowCreateIncidentByPhone:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -315,17 +336,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowCreateIncidentByPhoneExecutionRole"
@@ -372,16 +395,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowCreateIncidentByPhone",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowCreateIncidentByPhone",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowCreateIncidentByPhone",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowCreateIncidentByPhone",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowCreateIncidentByPhoneEventRuleToInvokeLambda": {
@@ -413,7 +438,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -435,17 +461,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowGetIncidentByPhoneExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowGetIncidentByPhoneExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowGetIncidentByPhoneExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -465,21 +495,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowGetIncidentByPhone:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowGetIncidentByPhone:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -490,17 +523,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowGetIncidentByPhoneExecutionRole"
@@ -547,16 +582,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowGetIncidentByPhone",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowGetIncidentByPhone",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowGetIncidentByPhone",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowGetIncidentByPhone",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowGetIncidentByPhoneEventRuleToInvokeLambda": {
@@ -588,7 +625,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -610,17 +648,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowGetIncidentStateExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowGetIncidentStateExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowGetIncidentStateExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -640,21 +682,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowGetIncidentState:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowGetIncidentState:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -665,17 +710,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowGetIncidentStateExecutionRole"
@@ -722,16 +769,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowGetIncidentState",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowGetIncidentState",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowGetIncidentState",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowGetIncidentState",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowGetIncidentStateEventRuleToInvokeLambda": {
@@ -763,7 +812,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -785,17 +835,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowGetLatestStateByPhoneExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowGetLatestStateByPhoneExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowGetLatestStateByPhoneExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -815,21 +869,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowGetLatestStateByPhone:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowGetLatestStateByPhone:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -840,17 +897,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowGetLatestStateByPhoneExecutionRole"
@@ -897,16 +956,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowGetLatestStateByPhone",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowGetLatestStateByPhone",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowGetLatestStateByPhone",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowGetLatestStateByPhone",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowGetLatestStateByPhoneEventRuleToInvokeLambda": {
@@ -938,7 +999,8 @@
                 },
                 "SourceArn": {
                     "Fn::Join": [
-                        "", [
+                        "",
+                        [
                             "arn:aws:connect:",
                             {
                                 "Ref": "AWS::Region"
@@ -960,17 +1022,21 @@
             "Type": "AWS::IAM::Policy",
             "Properties": {
                 "PolicyName": "ServiceNowintegrationTestExecutionPolicy",
-                "Roles": [{
-                    "Ref": "ServiceNowintegrationTestExecutionRole"
-                }],
+                "Roles": [
+                    {
+                        "Ref": "ServiceNowintegrationTestExecutionRole"
+                    }
+                ],
                 "PolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
+                    "Statement": [
+                        {
                             "Effect": "Allow",
                             "Action": "logs:CreateLogGroup",
                             "Resource": {
                                 "Fn::Join": [
-                                    "", [
+                                    "",
+                                    [
                                         "arn:aws:logs:",
                                         {
                                             "Ref": "AWS::Region"
@@ -990,21 +1056,24 @@
                                 "logs:CreateLogStream",
                                 "logs:PutLogEvents"
                             ],
-                            "Resource": [{
-                                "Fn::Join": [
-                                    "", [
-                                        "arn:aws:logs:",
-                                        {
-                                            "Ref": "AWS::Region"
-                                        },
-                                        ":",
-                                        {
-                                            "Ref": "AWS::AccountId"
-                                        },
-                                        ":log-group:/aws/lambda/ServiceNowintegrationTest:*"
+                            "Resource": [
+                                {
+                                    "Fn::Join": [
+                                        "",
+                                        [
+                                            "arn:aws:logs:",
+                                            {
+                                                "Ref": "AWS::Region"
+                                            },
+                                            ":",
+                                            {
+                                                "Ref": "AWS::AccountId"
+                                            },
+                                            ":log-group:/aws/lambda/ServiceNowintegrationTest:*"
+                                        ]
                                     ]
-                                ]
-                            }]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -1015,17 +1084,19 @@
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Version": "2012-10-17",
-                    "Statement": [{
-                        "Effect": "Allow",
-                        "Principal": {
-                            "Service": [
-                                "lambda.amazonaws.com"
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
                             ]
-                        },
-                        "Action": [
-                            "sts:AssumeRole"
-                        ]
-                    }]
+                        }
+                    ]
                 },
                 "Path": "/",
                 "RoleName": "ServiceNowintegrationTestExecutionRole"
@@ -1072,16 +1143,18 @@
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
                 "State": "ENABLED",
-                "Targets": [{
-                    "Arn": {
-                        "Fn::GetAtt": [
-                            "ServiceNowintegrationTest",
-                            "Arn"
-                        ]
-                    },
-                    "Id": "ServiceNowintegrationTest",
-                    "Input": "{\"keepwarm\": true}"
-                }]
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "ServiceNowintegrationTest",
+                                "Arn"
+                            ]
+                        },
+                        "Id": "ServiceNowintegrationTest",
+                        "Input": "{\"keepwarm\": true}"
+                    }
+                ]
             }
         },
         "PermissionForServiceNowintegrationTestEventRuleToInvokeLambda": {
