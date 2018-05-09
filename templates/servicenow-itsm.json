@@ -25,6 +25,53 @@
             ]
         }
     },
+    "Outputs": {
+        "ServiceNowCreateIncidentArnOutput": {
+            "Description": "The ARN of the CreateIncident Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowCreateIncident",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowCreateIncidentByPhoneArnOutput": {
+            "Description": "The ARN of the CreateIncidentByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowCreateIncidentByPhone",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetIncidentByPhoneArnOutput": {
+            "Description": "The ARN of the GetIncidentByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetIncidentByPhone",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetIncidentStateArnOutput": {
+            "Description": "The ARN of the GetIncidentState Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetIncidentState",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetLatestStateByPhoneArnOutput": {
+            "Description": "The ARN of the GetLatestStateByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetLatestStateByPhone",
+                    "Arn"
+                ]
+            }
+        }
+    },
     "Parameters": {
         "ServiceNowUserName": {
             "Description": "ServiceNow User Name",
@@ -45,7 +92,6 @@
             "Type": "String"
         },
         "ConnectInstanceId": {
-            "Description": "Please visit https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-instance.html for instructions on how to find your Amazon Connect instance ID",
             "AllowedPattern": "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}",
             "ConstraintDescription": "Amazon Connect instance ID contains upper and lower case letters, numbers and dashes (-).",
             "Type": "String"
@@ -1172,53 +1218,6 @@
                         "Arn"
                     ]
                 }
-            }
-        }
-    },
-    "Outputs": {
-        "ServiceNowCreateIncidentArnOutput": {
-            "Description": "The ARN of the CreateIncident Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowCreateIncident",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowCreateIncidentByPhoneArnOutput": {
-            "Description": "The ARN of the CreateIncidentByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowCreateIncidentByPhone",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetIncidentByPhoneArnOutput": {
-            "Description": "The ARN of the GetIncidentByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetIncidentByPhone",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetIncidentStateArnOutput": {
-            "Description": "The ARN of the GetIncidentState Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetIncidentState",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetLatestStateByPhoneArnOutput": {
-            "Description": "The ARN of the GetLatestStateByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetLatestStateByPhone",
-                    "Arn"
-                ]
             }
         }
     }
