@@ -9,4 +9,4 @@ global:
 tests:
   connect-integration-servicenow-itsm:
     parameter_input: defaults.json
-    template_file: ServiceNow.json
+    template_file: servicenow-itsm.json
