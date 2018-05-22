@@ -46,6 +46,7 @@
             "Type": "String"
         },
         "ConnectInstanceId": {
+            "Description": "Amazon Connect instance ID",
             "AllowedPattern": "[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}",
             "ConstraintDescription": "Amazon Connect instance ID contains upper and lower case letters, numbers and dashes (-).",
             "Type": "String"
