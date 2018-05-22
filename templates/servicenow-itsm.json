@@ -98,6 +98,25 @@
         }
     },
     "Resources": {
+        "InvokeServiceNowIntegrationTestFunction": {
+            "Type": "Custom::InvokeServiceNowIntegrationTestFunction",
+            "Version": "1.0",
+            "DependsOn": "ServiceNowIntegrationTest",
+            "Properties": {
+                "ServiceToken": {
+                    "Fn::GetAtt": "ServiceNowIntegrationTest.Arn"
+                },
+                "SNOW_USERNAME": {
+                    "Fn::Sub": "${ServiceNowUserName}"
+                },
+                "SNOW_HOST": {
+                    "Fn::Sub": "${ServiceNowHost}"
+                },
+                "SNOW_PASSWORD": {
+                    "Fn::Sub": "${ServiceNowPassword}"
+                }
+            }
+        },
         "ServiceNowCreateIncidentConnectPermission": {
             "Type": "AWS::Lambda::Permission",
             "DependsOn": "ServiceNowCreateIncident",
@@ -1033,12 +1052,12 @@
                 }
             }
         },
-        "ServiceNowintegrationTestConnectPermission": {
+        "ServiceNowIntegrationTestConnectPermission": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": "ServiceNowintegrationTest",
+            "DependsOn": "ServiceNowIntegrationTest",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowintegrationTest",
+                "FunctionName": "function:ServiceNowIntegrationTest",
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -1064,13 +1083,13 @@
                 }
             }
         },
-        "ServiceNowintegrationTestExecutionPolicy": {
+        "ServiceNowIntegrationTestExecutionPolicy": {
             "Type": "AWS::IAM::Policy",
             "Properties": {
-                "PolicyName": "ServiceNowintegrationTestExecutionPolicy",
+                "PolicyName": "ServiceNowIntegrationTestExecutionPolicy",
                 "Roles": [
                     {
-                        "Ref": "ServiceNowintegrationTestExecutionRole"
+                        "Ref": "ServiceNowIntegrationTestExecutionRole"
                     }
                 ],
                 "PolicyDocument": {
@@ -1115,7 +1134,7 @@
                                             {
                                                 "Ref": "AWS::AccountId"
                                             },
-                                            ":log-group:/aws/lambda/ServiceNowintegrationTest:*"
+                                            ":log-group:/aws/lambda/ServiceNowIntegrationTest:*"
                                         ]
                                     ]
                                 }
@@ -1125,7 +1144,7 @@
                 }
             }
         },
-        "ServiceNowintegrationTestExecutionRole": {
+        "ServiceNowIntegrationTestExecutionRole": {
             "Type": "AWS::IAM::Role",
             "Properties": {
                 "AssumeRolePolicyDocument": {
@@ -1145,17 +1164,17 @@
                     ]
                 },
                 "Path": "/",
-                "RoleName": "ServiceNowintegrationTestExecutionRole"
+                "RoleName": "ServiceNowIntegrationTestExecutionRole"
             }
         },
-        "ServiceNowintegrationTest": {
+        "ServiceNowIntegrationTest": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
                 "Code": {
                     "S3Bucket": "aws-quickstart",
-                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/integrationTest/lambda.zip"
+                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/IntegrationTest/lambda.zip"
                 },
-                "Description": "ServiceNow integrationTest",
+                "Description": "ServiceNow IntegrationTest",
                 "Environment": {
                     "Variables": {
                         "SERVICENOW_USERNAME": {
@@ -1169,12 +1188,12 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowintegrationTest",
+                "FunctionName": "ServiceNowIntegrationTest",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
-                        "ServiceNowintegrationTestExecutionRole",
+                        "ServiceNowIntegrationTestExecutionRole",
                         "Arn"
                     ]
                 },
@@ -1182,9 +1201,9 @@
                 "Runtime": "nodejs6.10"
             }
         },
-        "KeepServiceNowintegrationTestWarmEventRule": {
+        "KeepServiceNowIntegrationTestWarmEventRule": {
             "Type": "AWS::Events::Rule",
-            "DependsOn": "ServiceNowintegrationTest",
+            "DependsOn": "ServiceNowIntegrationTest",
             "Properties": {
                 "Description": "Keeps the lambdas warm by pinging them every (n)minutes.",
                 "ScheduleExpression": "rate(10 minutes)",
@@ -1193,28 +1212,28 @@
                     {
                         "Arn": {
                             "Fn::GetAtt": [
-                                "ServiceNowintegrationTest",
+                                "ServiceNowIntegrationTest",
                                 "Arn"
                             ]
                         },
-                        "Id": "ServiceNowintegrationTest",
+                        "Id": "ServiceNowIntegrationTest",
                         "Input": "{\"keepwarm\": true}"
                     }
                 ]
             }
         },
-        "PermissionForServiceNowintegrationTestEventRuleToInvokeLambda": {
+        "PermissionForServiceNowIntegrationTestEventRuleToInvokeLambda": {
             "Type": "AWS::Lambda::Permission",
-            "DependsOn": "ServiceNowintegrationTest",
+            "DependsOn": "ServiceNowIntegrationTest",
             "Properties": {
                 "FunctionName": {
-                    "Ref": "ServiceNowintegrationTest"
+                    "Ref": "ServiceNowIntegrationTest"
                 },
                 "Action": "lambda:InvokeFunction",
                 "Principal": "events.amazonaws.com",
                 "SourceArn": {
                     "Fn::GetAtt": [
-                        "KeepServiceNowintegrationTestWarmEventRule",
+                        "KeepServiceNowIntegrationTestWarmEventRule",
                         "Arn"
                     ]
                 }
