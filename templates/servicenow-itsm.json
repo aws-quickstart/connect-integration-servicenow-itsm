@@ -25,53 +25,6 @@
             ]
         }
     },
-    "Outputs": {
-        "ServiceNowCreateIncidentArnOutput": {
-            "Description": "The ARN of the CreateIncident Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowCreateIncident",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowCreateIncidentByPhoneArnOutput": {
-            "Description": "The ARN of the CreateIncidentByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowCreateIncidentByPhone",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetIncidentByPhoneArnOutput": {
-            "Description": "The ARN of the GetIncidentByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetIncidentByPhone",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetIncidentStateArnOutput": {
-            "Description": "The ARN of the GetIncidentState Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetIncidentState",
-                    "Arn"
-                ]
-            }
-        },
-        "ServiceNowGetLatestStateByPhoneArnOutput": {
-            "Description": "The ARN of the GetLatestStateByPhone Lambda",
-            "Value": {
-                "Fn::GetAtt": [
-                    "ServiceNowGetLatestStateByPhone",
-                    "Arn"
-                ]
-            }
-        }
-    },
     "Parameters": {
         "ServiceNowUserName": {
             "Description": "ServiceNow User Name",
@@ -83,7 +36,8 @@
             "Description": "ServiceNow Password",
             "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
             "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
-            "Type": "String"
+            "Type": "String",
+            "NoEcho": true
         },
         "ServiceNowHost": {
             "Description": "ServiceNow Host (example.service-now.com)",
@@ -122,7 +76,9 @@
             "DependsOn": "ServiceNowCreateIncident",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowCreateIncident",
+                "FunctionName": {
+                    "Ref": "ServiceNowCreateIncident"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -253,7 +209,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowCreateIncident",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -309,7 +264,9 @@
             "DependsOn": "ServiceNowCreateIncidentByPhone",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowCreateIncidentByPhone",
+                "FunctionName": {
+                    "Ref": "ServiceNowCreateIncidentByPhone"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -440,7 +397,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowCreateIncidentByPhone",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -496,7 +452,9 @@
             "DependsOn": "ServiceNowGetIncidentByPhone",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowGetIncidentByPhone",
+                "FunctionName": {
+                    "Ref": "ServiceNowGetIncidentByPhone"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -627,7 +585,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowGetIncidentByPhone",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -683,7 +640,9 @@
             "DependsOn": "ServiceNowGetIncidentState",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowGetIncidentState",
+                "FunctionName": {
+                    "Ref": "ServiceNowGetIncidentState"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -814,7 +773,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowGetIncidentState",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -870,7 +828,9 @@
             "DependsOn": "ServiceNowGetLatestStateByPhone",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowGetLatestStateByPhone",
+                "FunctionName": {
+                    "Ref": "ServiceNowGetLatestStateByPhone"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -1001,7 +961,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowGetLatestStateByPhone",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -1057,7 +1016,9 @@
             "DependsOn": "ServiceNowIntegrationTest",
             "Properties": {
                 "Action": "lambda:InvokeFunction",
-                "FunctionName": "function:ServiceNowIntegrationTest",
+                "FunctionName": {
+                    "Ref": "ServiceNowIntegrationTest"
+                },
                 "Principal": "connect.amazonaws.com",
                 "SourceAccount": {
                     "Ref": "AWS::AccountId"
@@ -1172,7 +1133,7 @@
             "Properties": {
                 "Code": {
                     "S3Bucket": "aws-quickstart",
-                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/IntegrationTest/lambda.zip"
+                    "S3Key": "connect-integration-servicenow-itsm/functions/packages/integrationTest/lambda.zip"
                 },
                 "Description": "ServiceNow IntegrationTest",
                 "Environment": {
@@ -1188,7 +1149,6 @@
                         }
                     }
                 },
-                "FunctionName": "ServiceNowIntegrationTest",
                 "Handler": "index.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -1237,6 +1197,53 @@
                         "Arn"
                     ]
                 }
+            }
+        }
+    },
+    "Outputs": {
+        "ServiceNowCreateIncidentArnOutput": {
+            "Description": "The ARN of the CreateIncident Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowCreateIncident",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowCreateIncidentByPhoneArnOutput": {
+            "Description": "The ARN of the CreateIncidentByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowCreateIncidentByPhone",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetIncidentByPhoneArnOutput": {
+            "Description": "The ARN of the GetIncidentByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetIncidentByPhone",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetIncidentStateArnOutput": {
+            "Description": "The ARN of the GetIncidentState Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetIncidentState",
+                    "Arn"
+                ]
+            }
+        },
+        "ServiceNowGetLatestStateByPhoneArnOutput": {
+            "Description": "The ARN of the GetLatestStateByPhone Lambda",
+            "Value": {
+                "Fn::GetAtt": [
+                    "ServiceNowGetLatestStateByPhone",
+                    "Arn"
+                ]
             }
         }
     }
