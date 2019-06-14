@@ -219,7 +219,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowCreateIncidentWarmEventRule": {
@@ -407,7 +407,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowCreateIncidentByPhoneWarmEventRule": {
@@ -595,7 +595,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowGetIncidentByPhoneWarmEventRule": {
@@ -783,7 +783,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowGetIncidentStateWarmEventRule": {
@@ -971,7 +971,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowGetLatestStateByPhoneWarmEventRule": {
@@ -1159,7 +1159,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs6.10"
+                "Runtime": "nodejs8.10"
             }
         },
         "KeepServiceNowIntegrationTestWarmEventRule": {
