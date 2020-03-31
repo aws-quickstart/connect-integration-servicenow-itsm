@@ -1,0 +1,16 @@
+project:
+  name: connect-integration-servicenow-itsm
+  owner: tom.huguenard@waterfield.com
+  package_lambda: false
+  regions:
+    - us-east-1
+tests:
+  connect-integration-servicenow-itsm:
+    parameters:
+      ConnectInstanceId: $[alfred_genuuid]
+      ServiceNowHost: $[alfred_genuuid]
+      ServiceNowPassword: $[alfred_genuuid]
+      ServiceNowUserName: $[alfred_genuuid]
+    regions:
+      - us-east-1
+    template: templates/servicenow-itsm.template.yaml
