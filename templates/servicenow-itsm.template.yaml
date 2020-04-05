@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: ServiceNow Incident Management integration for Amazon Connect (qs-1oe4gsu1d)
 Metadata:
-  AWS: :CloudFormation: :Interface:
+  AWS::CloudFormation::Interface:
     ParameterGroups:
     - Label:
         default: Amazon Connect Configuration
@@ -41,39 +41,38 @@ Parameters:
     Type: String
 Resources:
   InvokeServiceNowIntegrationTestFunction:
-    Type: Custom: :InvokeServiceNowIntegrationTestFunction
+    Type: Custom::InvokeServiceNowIntegrationTestFunction
     Version: '1.0'
     DependsOn: ServiceNowIntegrationTest
     Properties:
       ServiceToken:
-        Fn: :GetAtt: ServiceNowIntegrationTest.Arn
+        Fn::GetAtt: ServiceNowIntegrationTest.Arn
       SNOW_USERNAME:
-        Fn: :Sub: "${ServiceNowUserName}"
+        Fn::Sub: "${ServiceNowUserName}"
       SNOW_HOST:
-        Fn: :Sub: "${ServiceNowHost}"
+        Fn::Sub: "${ServiceNowHost}"
       SNOW_PASSWORD:
-        Fn: :Sub: "${ServiceNowPassword}"
+        Fn::Sub: "${ServiceNowPassword}"
   ServiceNowCreateIncidentConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowCreateIncident
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowCreateIncident
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowCreateIncidentExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowCreateIncidentExecutionPolicy
       Roles:
@@ -84,27 +83,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowCreateIncident:*"
   ServiceNowCreateIncidentExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -118,7 +117,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowCreateIncidentExecutionRole
   ServiceNowCreateIncident:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -127,29 +126,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowCreateIncidentExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowCreateIncidentWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowCreateIncident
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowCreateIncident
           - Arn
         Id: ServiceNowCreateIncident
@@ -157,38 +155,36 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowCreateIncidentEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowCreateIncident
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowCreateIncident
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowCreateIncidentWarmEventRule
         - Arn
   ServiceNowCreateIncidentByPhoneConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowCreateIncidentByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowCreateIncidentByPhone
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowCreateIncidentByPhoneExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowCreateIncidentByPhoneExecutionPolicy
       Roles:
@@ -199,27 +195,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowCreateIncidentByPhone:*"
   ServiceNowCreateIncidentByPhoneExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -233,7 +229,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowCreateIncidentByPhoneExecutionRole
   ServiceNowCreateIncidentByPhone:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -242,29 +238,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowCreateIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowCreateIncidentByPhoneWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowCreateIncidentByPhone
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowCreateIncidentByPhone
           - Arn
         Id: ServiceNowCreateIncidentByPhone
@@ -272,38 +267,36 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowCreateIncidentByPhoneEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowCreateIncidentByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowCreateIncidentByPhone
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowCreateIncidentByPhoneWarmEventRule
         - Arn
   ServiceNowGetIncidentByPhoneConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetIncidentByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowGetIncidentByPhone
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowGetIncidentByPhoneExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowGetIncidentByPhoneExecutionPolicy
       Roles:
@@ -314,27 +307,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowGetIncidentByPhone:*"
   ServiceNowGetIncidentByPhoneExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -348,7 +341,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowGetIncidentByPhoneExecutionRole
   ServiceNowGetIncidentByPhone:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -357,29 +350,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowGetIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowGetIncidentByPhoneWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowGetIncidentByPhone
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowGetIncidentByPhone
           - Arn
         Id: ServiceNowGetIncidentByPhone
@@ -387,38 +379,36 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowGetIncidentByPhoneEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetIncidentByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowGetIncidentByPhone
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowGetIncidentByPhoneWarmEventRule
         - Arn
   ServiceNowGetIncidentStateConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetIncidentState
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowGetIncidentState
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowGetIncidentStateExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowGetIncidentStateExecutionPolicy
       Roles:
@@ -429,27 +419,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowGetIncidentState:*"
   ServiceNowGetIncidentStateExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -463,7 +453,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowGetIncidentStateExecutionRole
   ServiceNowGetIncidentState:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -472,29 +462,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowGetIncidentStateExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowGetIncidentStateWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowGetIncidentState
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowGetIncidentState
           - Arn
         Id: ServiceNowGetIncidentState
@@ -502,38 +491,36 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowGetIncidentStateEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetIncidentState
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowGetIncidentState
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowGetIncidentStateWarmEventRule
         - Arn
   ServiceNowGetLatestStateByPhoneConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetLatestStateByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowGetLatestStateByPhone
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowGetLatestStateByPhoneExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowGetLatestStateByPhoneExecutionPolicy
       Roles:
@@ -544,27 +531,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowGetLatestStateByPhone:*"
   ServiceNowGetLatestStateByPhoneExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -578,7 +565,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowGetLatestStateByPhoneExecutionRole
   ServiceNowGetLatestStateByPhone:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -587,29 +574,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowGetLatestStateByPhoneExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowGetLatestStateByPhoneWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowGetLatestStateByPhone
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowGetLatestStateByPhone
           - Arn
         Id: ServiceNowGetLatestStateByPhone
@@ -617,38 +603,36 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowGetLatestStateByPhoneEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowGetLatestStateByPhone
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowGetLatestStateByPhone
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowGetLatestStateByPhoneWarmEventRule
         - Arn
   ServiceNowIntegrationTestConnectPermission:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowIntegrationTest
+    Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
         Ref: ServiceNowIntegrationTest
       Principal: connect.amazonaws.com
       SourceAccount:
-        Ref: AWS: :AccountId
+        Ref: AWS::AccountId
       SourceArn:
-        Fn: :Join:
+        Fn::Join:
         - ''
         - - 'arn:aws:connect:'
-          - Ref: AWS: :Region
+          - Ref: AWS::Region
           - ":"
-          - Ref: AWS: :AccountId
+          - Ref: AWS::AccountId
           - ":instance/"
           - Ref: ConnectInstanceId
   ServiceNowIntegrationTestExecutionPolicy:
-    Type: AWS: :IAM: :Policy
+    Type: AWS::IAM::Policy
     Properties:
       PolicyName: ServiceNowIntegrationTestExecutionPolicy
       Roles:
@@ -659,27 +643,27 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn: :Join:
+            Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - "*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn: :Join:
+          - Fn::Join:
             - ''
             - - 'arn:aws:logs:'
-              - Ref: AWS: :Region
+              - Ref: AWS::Region
               - ":"
-              - Ref: AWS: :AccountId
+              - Ref: AWS::AccountId
               - ":log-group:/aws/lambda/ServiceNowIntegrationTest:*"
   ServiceNowIntegrationTestExecutionRole:
-    Type: AWS: :IAM: :Role
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
@@ -693,7 +677,7 @@ Resources:
       Path: "/"
       RoleName: ServiceNowIntegrationTestExecutionRole
   ServiceNowIntegrationTest:
-    Type: AWS: :Lambda: :Function
+    Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket: aws-quickstart
@@ -702,29 +686,28 @@ Resources:
       Environment:
         Variables:
           SERVICENOW_USERNAME:
-            Fn: :Sub: "${ServiceNowUserName}"
+            Fn::Sub: "${ServiceNowUserName}"
           SERVICENOW_HOST:
-            Fn: :Sub: "${ServiceNowHost}"
+            Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
-            Fn: :Sub: "${ServiceNowPassword}"
+            Fn::Sub: "${ServiceNowPassword}"
       Handler: index.handler
       MemorySize: 128
       Role:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - ServiceNowIntegrationTestExecutionRole
         - Arn
       Timeout: 10
       Runtime: nodejs10.x
   KeepServiceNowIntegrationTestWarmEventRule:
-    Type: AWS: :Events: :Rule
-    DependsOn: ServiceNowIntegrationTest
+    Type: AWS::Events::Rule
     Properties:
       Description: Keeps the lambdas warm by pinging them every (n)minutes.
       ScheduleExpression: rate(10 minutes)
       State: ENABLED
       Targets:
       - Arn:
-          Fn: :GetAtt:
+          Fn::GetAtt:
           - ServiceNowIntegrationTest
           - Arn
         Id: ServiceNowIntegrationTest
@@ -732,45 +715,44 @@ Resources:
     "keepwarm": true
 }'
   PermissionForServiceNowIntegrationTestEventRuleToInvokeLambda:
-    Type: AWS: :Lambda: :Permission
-    DependsOn: ServiceNowIntegrationTest
+    Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
         Ref: ServiceNowIntegrationTest
       Action: lambda:InvokeFunction
       Principal: events.amazonaws.com
       SourceArn:
-        Fn: :GetAtt:
+        Fn::GetAtt:
         - KeepServiceNowIntegrationTestWarmEventRule
         - Arn
 Outputs:
   ServiceNowCreateIncidentArnOutput:
     Description: The ARN of the CreateIncident Lambda
     Value:
-      Fn: :GetAtt:
+      Fn::GetAtt:
       - ServiceNowCreateIncident
       - Arn
   ServiceNowCreateIncidentByPhoneArnOutput:
     Description: The ARN of the CreateIncidentByPhone Lambda
     Value:
-      Fn: :GetAtt:
+      Fn::GetAtt:
       - ServiceNowCreateIncidentByPhone
       - Arn
   ServiceNowGetIncidentByPhoneArnOutput:
     Description: The ARN of the GetIncidentByPhone Lambda
     Value:
-      Fn: :GetAtt:
+      Fn::GetAtt:
       - ServiceNowGetIncidentByPhone
       - Arn
   ServiceNowGetIncidentStateArnOutput:
     Description: The ARN of the GetIncidentState Lambda
     Value:
-      Fn: :GetAtt:
+      Fn::GetAtt:
       - ServiceNowGetIncidentState
       - Arn
   ServiceNowGetLatestStateByPhoneArnOutput:
     Description: The ARN of the GetLatestStateByPhone Lambda
     Value:
-      Fn: :GetAtt:
+      Fn::GetAtt:
       - ServiceNowGetLatestStateByPhone
       - Arn
