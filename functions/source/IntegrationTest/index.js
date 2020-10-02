@@ -2,6 +2,26 @@ var https = require('https');
 var SUCCESS = "SUCCESS";
 var FAILED = "FAILED";
 
+exports.handle = (event, context, callback) => {
+    console.log("event: " + JSON.stringify(event));
+    console.log("context: " + JSON.stringify(context));
+
+    try {
+        if (event.hasOwnProperty("keepwarm") || event["RequestType"] === "Delete") {
+            console.log("Received keep warm or delete event");
+            send(event, context, SUCCESS);
+            return;
+        }
+
+        exports.handler(event, context);
+
+    } catch (error) {
+        console.log(error);
+        send(event, context, FAILED);
+    }
+
+};
+
 exports.handler = function (event, context) {
     var params = {
         phone: "123123123",
@@ -35,13 +55,14 @@ exports.handler = function (event, context) {
             Accept: 'application/json',
             Authorization: 'Basic ' + Buffer.from(params.sNowUserName + ":" + params.sNowPassword).toString('base64'),
         }
-    }
+    };
 
     params.requestData = {
         Phone: params.phone
     };
 
     urlExists(params.sNowHost, (itDoes) => {
+        console.log(itDoes);
         if (itDoes) {
             params.get_data = JSON.stringify(params.requestData);
             getData(params);
@@ -52,18 +73,37 @@ exports.handler = function (event, context) {
 
 };
 
-var getData = function (params) {
+var getData =  function (params) {
     try {
 
         var get_request = https.request(params.get_options, function (res) {
             var body = '';
-            res.on('data', chunk => body += chunk);
-            res.on('end', () => params.execute("reportSuccessToCfn", params, body));
-            res.on('error', e => params.execute("reportFailureToCfn", params, body));
+            res.on('data', processData);
+
+            function processData(chunk) {
+                console.log("data: " + chunk);
+                return body += chunk;
+            }
+
+            res.on('end', processSuccess);
+
+            function processSuccess() {
+                console.log("On success body: " + body);
+                return params.execute("reportSuccessToCfn", params, body);
+            }
+
+            res.on('error', processFailure);
+
+            function processFailure(e) {
+                console.log("On error body: " + body);
+                return params.execute("reportFailureToCfn", params, body);
+            }
         });
         get_request.write(params.get_data);
         get_request.end();
+
     } catch (err) {
+        console.log(err);
         params.funcs.reportFailureToCfn(params, null);
     }
 };
@@ -113,7 +153,7 @@ var send = function (event, context, responseStatus, responseData, physicalResou
 
     request.write(responseBody);
     request.end();
-}
+};
 
 var urlExists = function (url, callback) {
     var http = require('https'),
@@ -123,10 +163,10 @@ var urlExists = function (url, callback) {
             path: '/'
         },
         req = http.request(options, function (r) {
-            callback(r.statusCode == 200);
+            callback(r.statusCode === 200);
         });
     req.on("error", function (error) {
         callback(false);
     });
     req.end();
-}
+};

@@ -14,6 +14,12 @@ Metadata:
       - ServiceNowUserName
       - ServiceNowPassword
       - ServiceNowHost
+    - Label:
+        default: AWS Quick Start configuration (DO NOT CHANGE UNLESS DEPLOYING FROM YOUR OWN BUCKET)
+      Parameters:
+        - QSS3BucketName
+        - QSS3BucketRegion
+        - QSS3KeyPrefix
 Parameters:
   ServiceNowUserName:
     Description: ServiceNow User Name
@@ -39,6 +45,35 @@ Parameters:
     ConstraintDescription: Amazon Connect instance ID contains upper and lower case
       letters, numbers and dashes (-).
     Type: String
+  QSS3BucketName:
+    AllowedPattern: "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$"
+    ConstraintDescription: >-
+      Quick Start bucket name can include numbers, lowercase letters, uppercase
+      letters, and hyphens (-). It cannot start or end with a hyphen (-).
+    Default: aws-quickstart
+    Description: >-
+      S3 bucket that you created for your copy of Quick Start assets.
+      Use this if you decide to customize the Quick Start. This bucket name can include numbers, lowercase letters,
+      uppercase letters, and hyphens but should not start or end with a hyphen.
+    Type: String
+  QSS3BucketRegion:
+    Default: "us-east-1"
+    Description: "AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value."
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: "^[0-9a-zA-Z-/]*/$"
+    ConstraintDescription: >-
+      Quick Start key prefix can include numbers, lowercase letters, uppercase
+      letters, hyphens (-), and forward slash (/).
+    Default: connect-integration-servicenow-itsm/
+    Description: >-
+      S3 key name prefix that is used to simulate a directory for your copy of Quick Start assets.
+      Use this if you decide to customize the Quick Start. This prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens, and forward slashes.
+      See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html.
+    Type: String
+Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, "aws-quickstart"]
 Resources:
   InvokeServiceNowIntegrationTestFunction:
     Type: Custom::InvokeServiceNowIntegrationTestFunction
@@ -83,25 +118,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowCreateIncident:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -115,12 +138,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowCreateIncidentExecutionRole
   ServiceNowCreateIncident:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/CreateIncident/lambda.zip
       Description: ServiceNow CreateIncident
       Environment:
@@ -195,25 +217,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
-          - logs:CreateLogStream
-          - logs:PutLogEvents
+            - logs:CreateLogStream
+            - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowCreateIncidentByPhone:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -227,12 +237,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowCreateIncidentByPhoneExecutionRole
   ServiceNowCreateIncidentByPhone:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/CreateIncidentByPhone/lambda.zip
       Description: ServiceNow CreateIncidentByPhone
       Environment:
@@ -307,25 +316,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
-          - logs:CreateLogStream
-          - logs:PutLogEvents
+            - logs:CreateLogStream
+            - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowGetIncidentByPhone:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -339,12 +336,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowGetIncidentByPhoneExecutionRole
   ServiceNowGetIncidentByPhone:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/GetIncidentByPhone/lambda.zip
       Description: ServiceNow GetIncidentByPhone
       Environment:
@@ -419,25 +415,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
-          - logs:CreateLogStream
-          - logs:PutLogEvents
+            - logs:CreateLogStream
+            - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowGetIncidentState:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentStateExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -451,12 +435,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowGetIncidentStateExecutionRole
   ServiceNowGetIncidentState:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/GetIncidentState/lambda.zip
       Description: ServiceNow GetIncidentState
       Environment:
@@ -531,25 +514,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
-          - logs:CreateLogStream
-          - logs:PutLogEvents
+            - logs:CreateLogStream
+            - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowGetLatestStateByPhone:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetLatestStateByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -563,12 +534,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowGetLatestStateByPhoneExecutionRole
   ServiceNowGetLatestStateByPhone:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/GetLatestStateByPhone/lambda.zip
       Description: ServiceNow GetLatestStateByPhone
       Environment:
@@ -599,9 +569,7 @@ Resources:
           - ServiceNowGetLatestStateByPhone
           - Arn
         Id: ServiceNowGetLatestStateByPhone
-        Input: '{
-    "keepwarm": true
-}'
+        Input: '{"keepwarm": true}'
   PermissionForServiceNowGetLatestStateByPhoneEventRuleToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
@@ -643,25 +611,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - "*"
+            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
-          - logs:CreateLogStream
-          - logs:PutLogEvents
+            - logs:CreateLogStream
+            - logs:PutLogEvents
           Resource:
-          - Fn::Join:
-            - ''
-            - - 'arn:aws:logs:'
-              - Ref: AWS::Region
-              - ":"
-              - Ref: AWS::AccountId
-              - ":log-group:/aws/lambda/ServiceNowIntegrationTest:*"
+            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowIntegrationTestExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -675,12 +631,11 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-      RoleName: ServiceNowIntegrationTestExecutionRole
   ServiceNowIntegrationTest:
     Type: AWS::Lambda::Function
     Properties:
       Code:
-        S3Bucket: aws-quickstart
+        S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         S3Key: connect-integration-servicenow-itsm/functions/packages/integrationTest/lambda.zip
       Description: ServiceNow IntegrationTest
       Environment:
@@ -691,7 +646,7 @@ Resources:
             Fn::Sub: "${ServiceNowHost}"
           SERVICENOW_PASSWORD:
             Fn::Sub: "${ServiceNowPassword}"
-      Handler: index.handler
+      Handler: index.handle
       MemorySize: 128
       Role:
         Fn::GetAtt:
@@ -711,9 +666,7 @@ Resources:
           - ServiceNowIntegrationTest
           - Arn
         Id: ServiceNowIntegrationTest
-        Input: '{
-    "keepwarm": true
-}'
+        Input: '{"keepwarm": true}'
   PermissionForServiceNowIntegrationTestEventRuleToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
