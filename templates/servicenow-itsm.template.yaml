@@ -160,7 +160,7 @@ Resources:
         - ServiceNowCreateIncidentExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowCreateIncidentWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -259,7 +259,7 @@ Resources:
         - ServiceNowCreateIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowCreateIncidentByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -358,7 +358,7 @@ Resources:
         - ServiceNowGetIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowGetIncidentByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -457,7 +457,7 @@ Resources:
         - ServiceNowGetIncidentStateExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowGetIncidentStateWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -556,7 +556,7 @@ Resources:
         - ServiceNowGetLatestStateByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowGetLatestStateByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -653,7 +653,7 @@ Resources:
         - ServiceNowIntegrationTestExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
   KeepServiceNowIntegrationTestWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
