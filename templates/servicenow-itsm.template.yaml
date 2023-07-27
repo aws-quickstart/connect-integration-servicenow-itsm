@@ -18,7 +18,6 @@ Metadata:
         default: AWS Quick Start configuration (DO NOT CHANGE UNLESS DEPLOYING FROM YOUR OWN BUCKET)
       Parameters:
         - QSS3BucketName
-        - QSS3BucketRegion
         - QSS3KeyPrefix
 Parameters:
   ServiceNowUserName:
@@ -54,10 +53,6 @@ Parameters:
       S3 bucket that you created for your copy of Quick Start assets.
       Use this if you decide to customize the Quick Start. This bucket name can include numbers, lowercase letters,
       uppercase letters, and hyphens but should not start or end with a hyphen.
-    Type: String
-  QSS3BucketRegion:
-    Default: "us-east-1"
-    Description: "AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value."
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: "^[0-9a-zA-Z-/]*/$"
@@ -117,13 +112,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -216,13 +211,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -315,13 +310,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -414,13 +409,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentStateExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -513,13 +508,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetLatestStateByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -610,13 +605,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowIntegrationTestExecutionRole:
     Type: AWS::IAM::Role
     Properties:
