@@ -34,7 +34,6 @@
         },
         "ServiceNowPassword": {
             "Description": "ServiceNow Password",
-            "AllowedPattern": "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$",
             "ConstraintDescription": "Password must contain at least one upper case letter, on lower case letter, and one number. It must be at least 8 characters in length.",
             "Type": "String",
             "NoEcho": true
@@ -219,7 +218,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowCreateIncidentWarmEventRule": {
@@ -407,7 +406,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowCreateIncidentByPhoneWarmEventRule": {
@@ -595,7 +594,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowGetIncidentByPhoneWarmEventRule": {
@@ -783,7 +782,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowGetIncidentStateWarmEventRule": {
@@ -971,7 +970,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowGetLatestStateByPhoneWarmEventRule": {
@@ -1159,7 +1158,7 @@
                     ]
                 },
                 "Timeout": 10,
-                "Runtime": "nodejs12.x"
+                "Runtime": "nodejs14.x"
             }
         },
         "KeepServiceNowIntegrationTestWarmEventRule": {

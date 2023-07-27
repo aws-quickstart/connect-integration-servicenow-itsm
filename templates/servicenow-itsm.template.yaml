@@ -18,8 +18,6 @@ Metadata:
         default: AWS Quick Start configuration (DO NOT CHANGE UNLESS DEPLOYING FROM YOUR OWN BUCKET)
       Parameters:
         - QSS3BucketName
-        - QSS3BucketRegion
-        - QSS3KeyPrefix
 Parameters:
   ServiceNowUserName:
     Description: ServiceNow User Name
@@ -28,7 +26,6 @@ Parameters:
     Type: String
   ServiceNowPassword:
     Description: ServiceNow Password
-    AllowedPattern: "^(?=.*[a-z].*)(?=.*[0-9].*)(?=.*[A-Z].*)(?=.*)[a-zA-Z0-9]{8,}$"
     ConstraintDescription: Password must contain at least one upper case letter, on
       lower case letter, and one number. It must be at least 8 characters in length.
     Type: String
@@ -55,22 +52,6 @@ Parameters:
       S3 bucket that you created for your copy of Quick Start assets.
       Use this if you decide to customize the Quick Start. This bucket name can include numbers, lowercase letters,
       uppercase letters, and hyphens but should not start or end with a hyphen.
-    Type: String
-  QSS3BucketRegion:
-    Default: "us-east-1"
-    Description: "AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value."
-    Type: String
-  QSS3KeyPrefix:
-    AllowedPattern: "^[0-9a-zA-Z-/]*/$"
-    ConstraintDescription: >-
-      Quick Start key prefix can include numbers, lowercase letters, uppercase
-      letters, hyphens (-), and forward slash (/).
-    Default: connect-integration-servicenow-itsm/
-    Description: >-
-      S3 key name prefix that is used to simulate a directory for your copy of Quick Start assets.
-      Use this if you decide to customize the Quick Start. This prefix can include numbers, lowercase letters,
-      uppercase letters, hyphens, and forward slashes.
-      See https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html.
     Type: String
 Conditions:
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, "aws-quickstart"]
@@ -118,13 +99,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
           - logs:CreateLogStream
           - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -160,7 +141,7 @@ Resources:
         - ServiceNowCreateIncidentExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowCreateIncidentWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -217,13 +198,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowCreateIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -259,7 +240,7 @@ Resources:
         - ServiceNowCreateIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowCreateIncidentByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -316,13 +297,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -358,7 +339,7 @@ Resources:
         - ServiceNowGetIncidentByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowGetIncidentByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -415,13 +396,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetIncidentStateExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -457,7 +438,7 @@ Resources:
         - ServiceNowGetIncidentStateExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowGetIncidentStateWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -514,13 +495,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowGetLatestStateByPhoneExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -556,7 +537,7 @@ Resources:
         - ServiceNowGetLatestStateByPhoneExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowGetLatestStateByPhoneWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
@@ -611,13 +592,13 @@ Resources:
         - Effect: Allow
           Action: logs:CreateLogGroup
           Resource:
-            Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+            Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:*"
         - Effect: Allow
           Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
           Resource:
-            - Fn::Sub: "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
+            - Fn::Sub: "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*"
   ServiceNowIntegrationTestExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -653,7 +634,7 @@ Resources:
         - ServiceNowIntegrationTestExecutionRole
         - Arn
       Timeout: 10
-      Runtime: nodejs12.x
+      Runtime: nodejs14.x
   KeepServiceNowIntegrationTestWarmEventRule:
     Type: AWS::Events::Rule
     Properties:
